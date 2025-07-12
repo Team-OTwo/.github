@@ -30,6 +30,36 @@
   - 작업 완료 후 브랜치는 삭제 가능합니다.
 
 ## 2. 워크플로우
+```mermaid
+sequenceDiagram
+    participant M as main
+    participant F as feature/기능이름
+    participant B as bugfix/버그설명
+    participant R as Code Review
+
+    Note over M: 안정적인 배포 상태 유지
+    M->>F: Create feature branch
+    activate F
+    F->>F: Develop feature
+    F->>F: Commit changes
+    F->>R: Create Pull Request
+    activate R
+    R->>M: Approve & Merge to main
+    deactivate R
+    F->>F: Delete feature branch
+    deactivate F
+
+    M->>B: Create bugfix branch
+    activate B
+    B->>B: Fix bug
+    B->>B: Commit changes
+    B->>R: Create Pull Request
+    activate R
+    R->>M: Approve & Merge to main
+    deactivate R
+    B->>B: Delete bugfix branch
+    deactivate B
+```
 
 1. **기능 개발**:
    - `main` 브랜치에서 `feature/기능이름` 브랜치를 생성합니다.
