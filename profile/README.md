@@ -1,130 +1,67 @@
+# Team O2: LG CNS AM INSPIRE CAMP 2기 1조
+> **더 공정하게, 더 투명하게**  
+> **DID 기반 모바일 티켓 플랫폼**
+
+<br/>
+
+## 📖 프로젝트 소개
+**PYOKEMON**은 암표 차단을 위한 **DID(Decentralized Identifier) 기반 공연 예매 및 입장 관리 플랫폼**입니다.
+
+현재 공연 예매 시장에서 발생하는 매크로/암표 문제를 해결하고,<br/>
+공정하고 안전한 티켓 거래 환경을 만드는 것을 목표로 합니다.
+
+### 🏷️ 개요
+- 프로젝트 명: Pyokemon
+- 도메인: 공공
+
+### 🚨 기존 시장의 문제점
+- ⚙️ **기술적 취약점**: 매크로의 티켓 선점으로 인한 예매 불균형  
+- ⚖️ **제도적 공백**: 암표 규제 및 판매자 책임 부재 → 제도적 보호 장치 미흡  
+- 🧩 **구조적 한계**: 위조 티켓 및 불법 양도 방지의 어려움
 
 
-# Git Branch 전략
+### 🌟 핵심 목표
+1. 공정성 확보: 암표 및 불법 거래 차단
+2. 편의성 향상: 모바일 앱 기반의 간편한 검표
+3. 신뢰성 제고: 위변조 불가능한 DID 기반 인증
 
-이 문서는 프로젝트에서 사용할 Git 브랜치 전략을 설명합니다. `main` 브랜치를 중심으로 기능 개발과 오류 수정 작업을 체계적으로 관리하기 위한 전략입니다.
 
-## 1. 브랜치 구조
+## 주요 기능
+- 🔑 **공연** **예매**: DID 기반 예매자 인증을 통한 양도 방지 및 예매 내역 관리
+- 🎟️ **티켓 발급**: 암호화된 QR 코드로 티켓 발급
+- 📱 **모바일 입장**: 현장에서 QR 스캔 → 실시간 검증 → 입장 완료
+- 🛡️ **위변조 방지**: 검증 가능한 증명(Verifiable Presentation) 기반 보안
+- 📊 **관리자 대시보드**: 공연 관리 및 예매 현황 모니터링
 
-### 1.1. Main 브랜치
-- **역할**: 배포 가능한 안정적인 코드를 유지합니다.
-- **특징**:
-  - 항상 프로덕션 환경에 배포 가능한 상태로 유지됩니다.
-  - 모든 변경 사항은 다른 브랜치에서 개발 후 `main` 브랜치로 병합됩니다.
-  - 직접적인 커밋은 금지되며, Pull Request(PR)를 통해 코드 리뷰 후 병합됩니다.
 
-### 1.2. Feature 브랜치
-- **역할**: 새로운 기능 개발을 위해 사용됩니다.
-- **명명 규칙**: `feature/기능이름` (예: `feature/login-system`)
-- **특징**:
-  - `main` 브랜치에서 분기됩니다.
-  - 기능 개발 완료 후 `main` 브랜치로 병합됩니다.
-  - 작업 완료 후 브랜치는 삭제 가능합니다.
+## 아키텍처
+### 📱 Client
+- **User Web**: 공연 조회 및 예매
+- **User App**: 모바일 티켓 발급 및 입장
+- **Tenant Web**: 공연 등록 및 관리
+- **Tenant App**: 현장 입장 검증 및 관리
 
-### 1.3. Bugfix 브랜치
-- **역할**: `main` 브랜치에서 발견된 버그를 수정합니다.
-- **명명 규칙**: `bugfix/버그설명` (예: `bugfix/fix-login-error`)
-- **특징**:
-  - `main` 브랜치에서 분기됩니다.
-  - 버그 수정 완료 후 `main` 브랜치로 병합됩니다.
-  - 작업 완료 후 브랜치는 삭제 가능합니다.
+### ⚙️ Service
+- **API Gateway**: 외부 요청을 받아 각 서비스로 라우팅
+- **BFF**: 복합 API 요청을 통합 처리해 빠른 응답 제공 및 서비스 독립성 보장
+- **Account**: 사용자 계정 및 인증/인가 관리
+- **Booking**: 공연 티켓 예매 및 예약 상태 관리
+- **DID**: 분산 신원 증명(DID) 기반 티켓 발급 및 검증
+- **Event**: 공연 정보 관리
+- **Payment**: 안전한 결제 처리 및 거래 내역 관리
+- **Notification**: 예매/결제/입장 관련 알림 발송
 
-## 2. 워크플로우
-```mermaid
-sequenceDiagram
-    participant M as main
-    participant F as feature/기능이름
-    participant B as bugfix/버그설명
-    participant R as Code Review
 
-    Note over M: 안정적인 배포 상태 유지
-    M->>F: Create feature branch
-    activate F
-    F->>F: Develop feature
-    F->>F: Commit changes
-    F->>R: Create Pull Request
-    activate R
-    R->>M: Approve & Merge to main
-    deactivate R
-    F->>F: Delete feature branch
-    deactivate F
+## 👥 팀원 소개
 
-    M->>B: Create bugfix branch
-    activate B
-    B->>B: Fix bug
-    B->>B: Commit changes
-    B->>R: Create Pull Request
-    activate R
-    R->>M: Approve & Merge to main
-    deactivate R
-    B->>B: Delete bugfix branch
-    deactivate B
-```
-
-1. **기능 개발**:
-   - `main` 브랜치에서 `feature/기능이름` 브랜치를 생성합니다.
-   - 기능을 개발하고 커밋합니다.
-   - 개발 완료 후 `main` 브랜치로 Pull Request를 생성하여 코드 리뷰를 진행합니다.
-   - 최소 2명의 팀원에게 승인 받은 후 `main` 브랜치로 병합하고, `feature` 브랜치는 삭제합니다.
-
-2. **버그 수정**:
-   - `main` 브랜치에서 `bugfix/버그설명` 브랜치를 생성합니다.
-   - 버그를 수정하고 커밋합니다.
-   - 수정 완료 후 `main` 브랜치로 Pull Request를 생성하여 코드 리뷰를 진행합니다.
-   - 최소 2명의 팀원에게 승인 받은 후 `main` 브랜치로 병합하고, `bugfix` 브랜치는 삭제합니다.
-
-## 3. 브랜치 관리 규칙
-- **커밋 메시지**:
-  - 명확하고 간결하게 작성합니다.
-  - 예: `[Feature] 로그인 기능 추가`, `[Bugfix] 로그인 에러 수정`
-- **Pull Request**:
-  - PR 생성 시 작업 내용과 변경 사항을 명확히 설명합니다.
-  - 최소 2명 이상의 리뷰어의 승인이 필요합니다.
-- **충돌 해결**:
-  - 병합 시 충돌이 발생하면, 해당 브랜치에서 충돌을 해결한 후 다시 PR을 업데이트합니다.
-- **브랜치 삭제**:
-  - 병합 완료 후 불필요한 브랜치는 삭제하여 저장소를 깔끔하게 유지합니다.
-
-## 4. Git 명령어 예시
-
-### 4.1. Feature 브랜치 작업
-```bash
-# main 브랜치에서 시작
-git checkout main
-git pull origin main
-
-# 새로운 feature 브랜치 생성 및 이동
-git checkout -b feature/login-system
-
-# 작업 후 커밋
-git add .
-git commit -m "[Feature] 로그인 기능 추가"
-
-# 원격 저장소로 푸시
-git push origin feature/login-system
-
-# Pull Request 생성 (GitHub/GitLab UI에서 진행)
-# 병합 후 브랜치 삭제
-git push origin --delete feature/login-system
-```
-
-### 4.2. Bugfix 브랜치 작업
-```bash
-# main 브랜치에서 시작
-git checkout main
-git pull origin main
-
-# 새로운 bugfix 브랜치 생성 및 이동
-git checkout -b bugfix/fix-login-error
-
-# 작업 후 커밋
-git add .
-git commit -m "[Bugfix] 로그인 에러 수정"
-
-# 원격 저장소로 푸시
-git push origin bugfix/fix-login-error
-
-# Pull Request 생성 (GitHub/GitLab UI에서 진행)
-# 병합 후 브랜치 삭제
-git push origin --delete bugfix/fix-login-error
-```
+| 이름     | 역할 / 담당 서비스 |
+|----------|-------------------|
+| **임지빈** | 팀장, DID, Account |
+| **강찬혁** | User App, Notification, Tenant App |
+| **이준섭** | DID |
+| **이진영** | API Gateway, BFF, Account |
+| **임성운** | BFF, Account |
+| **정준희** | Tenant Web, Event |
+| **조수빈** | User Web, Event, Payment, Notification |
+| **채서윤** | User Web, Event, Booking |
+| **홍수민** | User Web, Tenant App, Event, BFF |
